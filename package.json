@@ -1,0 +1,29 @@
+{
+  "name": "couleur-cafe",
+  "version": "0.1.0",
+  "description": "Couleur Café is a discord bot based on Discord.js v13, written in CoffeeScript (hence the name, french wordplay, huge LOL).",
+  "main": "index.coffee",
+  "scripts": {
+    "dev": "nodemon index.coffee",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkepticalFrog/couleur-cafe.git"
+  },
+  "author": "SkepticalFrog",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SkepticalFrog/couleur-cafe/issues"
+  },
+  "homepage": "https://github.com/SkepticalFrog/couleur-cafe#readme",
+  "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "config": "^3.3.6",
+    "discord-api-types": "^0.22.0",
+    "discord.js": "^13.0.0-dev.t1627992462.35fa3b3",
+    "dotenv": "^10.0.0",
+    "mongoose": "^5.13.5",
+    "terminal-kit": "^2.1.6"
+  }
+}
