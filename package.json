@@ -1,11 +1,10 @@
 {
   "name": "couleur-cafe",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Couleur Café is a discord bot based on Discord.js v13, written in CoffeeScript (hence the name, french wordplay, huge LOL).",
   "main": "index.coffee",
   "scripts": {
     "dev": "nodemon index.coffee",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
