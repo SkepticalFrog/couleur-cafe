@@ -46,8 +46,9 @@ module.exports =
     ]
   execute: (interaction, client) ->
     { options } = interaction
-    try  
-      if options.getUser "user"?
+    try
+      await interaction.defer({ ephemeral: false })
+      if options.getUser("user")?
         id = options.getUser("user").id
       else
         id = interaction.user.id
@@ -56,17 +57,12 @@ module.exports =
 
       if user?
         if user.guilds.includes interaction.guild.id
-          return await interaction.reply
-            content: "L'utilisateur est déjà enregistré."
-            ephemeral: true
+          return await interaction.editReply "L'utilisateur existe déjà."
 
         user.guilds.push interaction.guild.id
         await user.save()
-        return await interaction.reply
-          content: "Utilisateur ajouté au serveur !"
-          ephemeral: false
+        return await interaction.editReply "Utilisateur ajouté au serveur !"
       
-      info "Yeah we'll have to create that MOFO..."
       user = new User {
         _id: id
         lastname: options.getString "lastname"
@@ -78,12 +74,10 @@ module.exports =
       user.guilds.push interaction.guild.id
 
       await user.save()
-      await interaction.reply
+      await interaction.editReply
         content: "#{options.getString "firstname"} #{options.getString "lastname"} enregistré !"
         ephemeral: false
 
     catch err
       error err
-      await interaction.reply 
-        content: "Bon bah ça a merdé apparemment. Merde."
-        ephemeral: true
+      await interaction.editReply "Eh ben ça a merdé."
