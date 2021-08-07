@@ -29,6 +29,7 @@ client.on "interactionCreate", (interaction) ->
   if not client.commands.has interaction.commandName
     return;
   try
+    info "using command /#{interaction.commandName}"
     await client.commands.get(interaction.commandName).execute(interaction, client);
   catch err
     error err
