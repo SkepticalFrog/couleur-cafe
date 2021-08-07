@@ -7,7 +7,12 @@ deployCommands = (client, token) ->
   rest = new REST({ version: "9" }).setToken(token);
   try
     info "Started refreshing application (/) commands"
-    await rest.put Routes.applicationGuildCommands(client.user.id, "836505699314958336"), { body: commands }
+    guilds = await client.guilds.cache
+    await Promise.all(
+        guilds.map (guild) ->
+          await rest.put Routes.applicationGuildCommands(client.user.id, guild.id), { body: commands }
+    )
+    
     # await rest.put Routes.applicationCommands(client.user.id), { body: commands }
     # await client.guilds.cache.get('123456789012345678')?.commands.create(data)
     log "Sucessfully reloaded application (/) commands."
