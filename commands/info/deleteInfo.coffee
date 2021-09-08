@@ -6,27 +6,17 @@ User = require "../../db/schemas/User"
 module.exports =
   name: "delete-info"
   description: "Delete user's info."
-  options: [
-    {
-      name: "user"
-      type: ApplicationCommandOptionType.User
-      description: "User to delete."
-      required: false
-    }
-  ]
+  options: []
   execute: (interaction, client) ->
     { options } = interaction
     try
-      await interaction.defer({ ephemeral: false })
-      if options.getUser("user")?
-        id = options.getUser("user").id
-      else
-        id = interaction.user.id
+      await interaction.defer { ephemeral: true }
+      id = interaction.user.id
 
-      user = await User.findById id
+      user = await User.findById id + "_" + interaction.guild.id
 
-      # if not user?
-      #   return await interaction.editReply "L'utilisateur n'est pas enregistré."
+      if not user?
+        return await interaction.editReply "L'utilisateur n'est pas enregistré."
 
       row = new MessageActionRow()
         .addComponents(
@@ -43,15 +33,15 @@ module.exports =
         )
 
       await interaction.editReply
-        content: "Es-tu sûr de vouloir supprimer <@#{id}> ?"
+        content: "Es-tu sûr de vouloir supprimer #{interaction.user} ?"
         components: [row]
 
 
       filter = (i) ->
-        i.deferUpdate()
-        return (i.user.id is id)
+        i.deferUpdate({ ephemeral: true })
+        return i.user.id is interaction.user.id
 
-      collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
+      collector = interaction.channel.createMessageComponentCollector { filter, time: 15000 }
 
       clicked = await collector.next
       collector.stop("Collected all I need")
@@ -61,12 +51,15 @@ module.exports =
           content: "Opération annulée"
           components: []
 
-      res = await User.findByIdAndDelete id
-      info res
+      res = await user.deleteOne()
+      if not res?
+        return await interaction.editReply "Error while deleting."
       await interaction.editReply
-        content: "Utilisateur <@#{id}> supprimé."
+        content: "Utilisateur #{interaction.user} supprimé."
         components: []
 
     catch err
       error err
-      await interaction.editReply "Eh ben ça a merdé."
+      await interaction.editReply 
+        content:"Eh ben ça a merdé."
+        components: []

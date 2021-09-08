@@ -6,7 +6,7 @@ deployCommands = (client, token) ->
   commands = client.commands.map ({ execute, ...data }) -> data; 
   rest = new REST({ version: "9" }).setToken(token);
   try
-    info "Started refreshing application (/) commands"
+    info 1, "Started refreshing application (/) commands"
     guilds = await client.guilds.cache
     await Promise.all(
         guilds.map (guild) ->

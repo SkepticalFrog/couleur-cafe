@@ -8,10 +8,6 @@ ServerSchema = mongoose.Schema {
   _id: reqString
   defaultChannel: reqString
   welcome: String
-  prefix: String
-  unused:
-    type: [String]
-    default: []
   botreplies:
     type: [String]
     default: []

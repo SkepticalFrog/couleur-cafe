@@ -12,4 +12,6 @@ module.exports =
     }
   ]
   execute: (interaction) ->
-    await interaction.reply interaction.options.getString "input"
+    await interaction.reply
+      content: interaction.options.getString "input"
+      ephemeral: true

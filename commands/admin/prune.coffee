@@ -29,11 +29,11 @@ module.exports =
         content: "Je ne peux pas supprimer moins de 1 message."
 
     if channel?
-      info channel.type
+      info 0, channel.type
     else
       channel = interaction.channel
 
-    if not ["GUILD_TEXT", "GUILD_PUBLIC_THREAD", "GUILD_PRIVATE_THREAD"].includes channel.type
+    if not channel.isText()
       return interaction.editReply "Il me faut un channel avec des messages écrits, abruti..."
 
     row = new MessageActionRow()
@@ -67,6 +67,7 @@ module.exports =
         components: []
 
     try
+      channel = await channel.fetch()
       deletedAmount = await channel.bulkDelete amount, true
       await interaction.editReply
         content: "#{deletedAmount.size} messages ont été supprimés sur <##{channel.id}>"
@@ -76,4 +77,3 @@ module.exports =
       await interaction.editReply
         content: "Erreur pendant la prune."
         components: []
-    

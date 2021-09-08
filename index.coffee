@@ -16,7 +16,7 @@ for folder in commandFolders
 
   for file in commandFiles
     command = require "./commands/#{folder}/#{file}"
-    info "./commands/#{folder}/#{file}"
+    info 1, "./commands/#{folder}/#{file}"
     client.commands.set command.name, command
 
 client.once "ready", ->
@@ -29,11 +29,17 @@ client.on "interactionCreate", (interaction) ->
   if not client.commands.has interaction.commandName
     return;
   try
-    info "using command /#{interaction.commandName}"
+    info 0, "#{interaction.user.username}#" +
+      "#{interaction.user.discriminator} " +
+      "used command /#{interaction.commandName}"
+    , interaction.options.data.map (option) ->
+        { name: option.name, value: option.value}
     await client.commands.get(interaction.commandName).execute(interaction, client);
   catch err
     error err
-    await interaction.reply { content: 'There was an error while executing this command!', ephemeral: true }
+    await interaction.editReply
+      content: "Erreur pendant l'exécution de la commande."
+      components: []
 
 client.login DTOKEN
 
