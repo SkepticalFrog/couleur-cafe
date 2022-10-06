@@ -20,8 +20,6 @@ module.exports =
         date = new Date 1000 * Number date_string
       else
         date = new Date Date.parse date_string
-      log "date: ", date.getTime()
-      log "type date: ", typeof date
       unless typeof date is "object"
         throw "INVALID_DATE"
 

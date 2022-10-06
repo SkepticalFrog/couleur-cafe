@@ -31,7 +31,9 @@ client.on "interactionCreate", (interaction) ->
   try
     info 0, "#{interaction.user.username}#" +
       "#{interaction.user.discriminator} " +
-      "used command /#{interaction.commandName}"
+      "used command /#{interaction.commandName} " +
+      "in server #{interaction.guild.name} " +
+      "on ##{interaction.channel.name or "DM channel"}"
     , interaction.options.data.map (option) ->
         { name: option.name, value: option.value}
     await client.commands.get(interaction.commandName).execute(interaction, client);
