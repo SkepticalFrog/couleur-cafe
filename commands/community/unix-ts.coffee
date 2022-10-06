@@ -22,6 +22,8 @@ module.exports =
         date = new Date Date.parse date_string
       unless typeof date is "object"
         throw "INVALID_DATE"
+      if date is null or date is undefined
+        throw "INVALID_DATE"
 
       embed = {
         color: 0xff6600
