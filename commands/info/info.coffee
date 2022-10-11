@@ -10,7 +10,7 @@ module.exports =
   options: [
     {
       name: "user"
-      description: "User to display | DON'T USE WIP"
+      description: "User to display"
       type: ApplicationCommandOptionType.User
       required: false
     }

@@ -22,7 +22,7 @@ module.exports =
         date = new Date Date.parse date_string
       unless typeof date is "object"
         throw "INVALID_DATE"
-      if date is null or date is undefined
+      if date is null or date is undefined or Object.prototype.toString.call date is not '[object Date]'
         throw "INVALID_DATE"
 
       embed = {
