@@ -25,9 +25,9 @@ client.once "ready", ->
 
 client.on "interactionCreate", (interaction) ->
   if not interaction.isCommand()
-    return;
+    return
   if not client.commands.has interaction.commandName
-    return;
+    return
   try
     info 0, "#{interaction.user.username}#" +
       "#{interaction.user.discriminator} " +
