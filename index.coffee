@@ -5,8 +5,15 @@ fs = require "fs"
 deployCommands = require "./deploy"
 connectDb = require "./db/connectDb"
 
-client = new Client { intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] }
+
+client = new Client { intents: [
+  Intents.FLAGS.GUILDS
+  Intents.FLAGS.GUILD_MESSAGES
+  Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+  1 << 15 # Intents.FLAGS.MESSAGE_CONTENT
+] }
 client.commands = new Collection()
+client.reaction_commands = new Collection()
 
 commandFolders = fs.readdirSync "./commands"
 
@@ -18,6 +25,13 @@ for folder in commandFolders
     command = require "./commands/#{folder}/#{file}"
     info 1, "./commands/#{folder}/#{file}"
     client.commands.set command.name, command
+
+reactionCommands = fs.readdirSync "./reaction_commands"
+
+for file in reactionCommands
+  command = require "./reaction_commands/#{file}"
+  info 1, "./reaction_commands/#{file}"
+  client.reaction_commands.set command.name, command
 
 client.once "ready", ->
   log "Ready!"
@@ -42,6 +56,20 @@ client.on "interactionCreate", (interaction) ->
     await interaction.editReply
       content: "Erreur pendant l'exécution de la commande."
       components: []
+
+client.on "messageReactionAdd", (messageReaction) ->
+  log messageReaction.emoji.name
+  if not client.reaction_commands.has messageReaction.emoji.name
+    return;
+  try
+    info 0, "#{messageReaction.message.author.username}#" +
+      "#{messageReaction.message.author.discriminator} " +
+      "used reaction command #{messageReaction.emoji.name} " +
+      "in server #{messageReaction.message.guild.name} " +
+      "on ##{messageReaction.message.channel.name or "DM channel"}"
+    await client.reaction_commands.get(messageReaction.emoji.name).execute(messageReaction, client);
+  catch err
+    error err
 
 client.login DTOKEN
 
